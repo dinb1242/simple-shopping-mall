@@ -13,6 +13,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Api(tags = {"연동용 API"})
 @Slf4j
 @RestController
@@ -28,16 +30,16 @@ public class ExampleController {
     @ApiResponses({
             @ApiResponse(code = 201, message = "생성 성공", response = ExampleResponseDto.class)
     })
-    public ResponseEntity<?> createExample(@RequestBody ExampleSaveRequestDto saveRequestDto) {
+    public ResponseEntity<ExampleResponseDto> createExample(@RequestBody ExampleSaveRequestDto saveRequestDto) {
         return new ResponseEntity<>(exampleService.createExample(saveRequestDto), HttpStatus.CREATED);
     }
 
     @GetMapping("")
     @ApiOperation(value = "예제 전체 조회 API", notes = "전체 예제 데이터를 조회한다.")
     @ApiResponses({
-            @ApiResponse(code = 200, message = "조회 성공")
+            @ApiResponse(code = 200, message = "조회 성공", response = ExampleResponseDto.class)
     })
-    public ResponseEntity<?> findExamples() {
+    public ResponseEntity<List<ExampleResponseDto>> findExamples() {
         return new ResponseEntity<>(exampleService.findExamples(), HttpStatus.OK);
     }
 
