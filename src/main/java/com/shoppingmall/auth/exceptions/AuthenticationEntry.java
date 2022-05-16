@@ -2,6 +2,7 @@ package com.shoppingmall.auth.exceptions;
 
 import com.shoppingmall.boot.exception.RestException;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.stereotype.Component;
@@ -16,6 +17,6 @@ import java.io.IOException;
 public class AuthenticationEntry implements AuthenticationEntryPoint {
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
-        response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+        response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "아이디 혹은 비밀번호가 일치하지 않습니다.");
     }
 }

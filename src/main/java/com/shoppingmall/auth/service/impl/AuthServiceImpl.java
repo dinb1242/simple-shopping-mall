@@ -4,6 +4,7 @@ import com.shoppingmall.auth.domain.model.Roles;
 import com.shoppingmall.auth.domain.repository.RolesRepository;
 import com.shoppingmall.auth.dto.request.SignInRequestDto;
 import com.shoppingmall.auth.dto.request.SignUpRequestDto;
+import com.shoppingmall.auth.dto.response.SignInResponseDto;
 import com.shoppingmall.auth.roles.ERole;
 import com.shoppingmall.auth.service.AuthService;
 import com.shoppingmall.boot.exception.RestException;
@@ -38,11 +39,18 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     @Transactional
-    public void signIn(SignInRequestDto requestDto) throws Exception {
+    public SignInResponseDto signIn(SignInRequestDto requestDto) throws Exception {
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(requestDto.getUsername(), requestDto.getPassword()));
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        jwtUtils.generateJwtToken(authentication);
+        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+
+        String token = jwtUtils.generateJwtToken(authentication);
+
+        return SignInResponseDto.builder()
+                .userId(userDetails.getId())
+                .aT(token)
+                .build();
     }
 
     @Override

@@ -22,7 +22,7 @@ public class ProductServiceImpl implements ProductService {
      */
     @Override
     public void createProduct(ProductSaveRequestDto requestDto) throws Exception {
-        if(productRepository.existsByProductCode(requestDto.getProductCode()))
+        if(productRepository.existsByProductCode(requestDto.getProductCode())) {}
 //            throw new Restexception
     }
 }

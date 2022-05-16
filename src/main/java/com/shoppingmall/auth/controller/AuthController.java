@@ -25,8 +25,7 @@ public class AuthController {
 
     @PostMapping("/sign-in")
     public ResponseEntity<?> signIn(@RequestBody SignInRequestDto requestDto) throws Exception {
-        authservice.signIn(requestDto);
-        return null;
+        return new ResponseEntity<>(authservice.signIn(requestDto), HttpStatus.OK);
     }
 
     @PostMapping("/sign-up")
