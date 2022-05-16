@@ -52,7 +52,7 @@ public class JwtUtils {
             throw new UnsupportedJwtException("지원하지 않는 토큰 형식입니다. msg=" + e.getMessage());
         } catch (MalformedJwtException e) {
             log.error("유효하지 않는 토큰입니다. msg=" + e.getMessage());
-            throw new MalformedJwtException("유효하지 않는 토큰입니다. Refresh Token 을 활용한 재갱신이 필요합니다. msg=" + e.getMessage());
+            throw new MalformedJwtException("유효하지 않는 토큰입니다. msg=" + e.getMessage());
         } catch (SignatureException e) {
             log.error("유효하지 않은 Signature 입니다. msg=" + e.getMessage());
             throw new SignatureException("유효하지 않은 Signature 입니다. msg=" + e.getMessage());
