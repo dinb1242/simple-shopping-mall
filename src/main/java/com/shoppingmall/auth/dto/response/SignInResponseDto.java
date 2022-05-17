@@ -13,7 +13,7 @@ public class SignInResponseDto {
     @ApiModelProperty(value = "유저 시퀀스")
     private Long userId;
 
-    @ApiModelProperty(value = "유저 aT")
-    private String aT;
+    @ApiModelProperty(value = "유저 Access Token")
+    private String accessToken;
 
 }

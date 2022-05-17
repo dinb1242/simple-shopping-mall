@@ -2,9 +2,12 @@ package com.shoppingmall.auth.service.impl;
 
 import com.shoppingmall.auth.domain.model.Roles;
 import com.shoppingmall.auth.domain.repository.RolesRepository;
+import com.shoppingmall.auth.dto.request.LostAccountRequestDto;
 import com.shoppingmall.auth.dto.request.SignInRequestDto;
 import com.shoppingmall.auth.dto.request.SignUpRequestDto;
+import com.shoppingmall.auth.dto.response.LostAccountResponseDto;
 import com.shoppingmall.auth.dto.response.SignInResponseDto;
+import com.shoppingmall.auth.enums.LostAccountTypeEnum;
 import com.shoppingmall.auth.roles.ERole;
 import com.shoppingmall.auth.service.AuthService;
 import com.shoppingmall.boot.exception.RestException;
@@ -25,6 +28,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -49,7 +53,7 @@ public class AuthServiceImpl implements AuthService {
 
         return SignInResponseDto.builder()
                 .userId(userDetails.getId())
-                .aT(token)
+                .accessToken(token)
                 .build();
     }
 
@@ -84,5 +88,28 @@ public class AuthServiceImpl implements AuthService {
         User userEntity = userRepository.save(user);
 
         return UserDetailsImpl.getUserDetails(userEntity);
+    }
+
+    /**
+     * 유저의 이름 혹은 휴대폰 번호를 통해 해당하는 username 을 반환한다.
+     * @param requestDto
+     * @throws Exception
+     */
+    @Override
+    @Transactional
+    public void lostUsername(LostAccountRequestDto requestDto) throws Exception {
+        List<String> usernames = new ArrayList<>();
+        switch (requestDto.getType().name()) {
+            case "FIND_BY_NAME":
+                usernames = userRepository.findAllByName(requestDto.getAnswer()).stream()
+                        .map(user -> user.getUsername())
+                        .collect(Collectors.toList());
+
+                break;
+            case "FIND_BY_PHONE":
+                break;
+            default :
+                throw new RestException(HttpStatus.BAD_REQUEST, "해당하지 않는 타입입니다. type=" + requestDto.getType().name());
+        }
     }
 }
