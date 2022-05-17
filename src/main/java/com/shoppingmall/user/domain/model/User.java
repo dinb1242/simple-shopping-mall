@@ -2,6 +2,7 @@ package com.shoppingmall.user.domain.model;
 
 import com.shoppingmall.auth.domain.model.Roles;
 import com.shoppingmall.boot.domain.BaseEntity;
+import com.shoppingmall.user.dto.request.UserInfoUpdateRequestDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -49,4 +50,23 @@ public class User extends BaseEntity {
             inverseJoinColumns = @JoinColumn(name = "roles_name")
     )
     private List<Roles> roles;
+
+    public void updatePassword(String updatedPassword) {
+        this.password = updatedPassword;
+    }
+
+    /**
+     * 유저의 정보를 변경한다.
+     * @param requestDto
+     */
+    public void updateInfo(UserInfoUpdateRequestDto requestDto) {
+        if(requestDto.getName() != null)
+            this.name = requestDto.getName();
+        if(requestDto.getAddress() != null)
+            this.address = requestDto.getAddress();
+        if (requestDto.getEmail() != null)
+            this.email = requestDto.getEmail();
+        if (requestDto.getPhone() != null)
+            this.phone = requestDto.getPhone();
+    }
 }

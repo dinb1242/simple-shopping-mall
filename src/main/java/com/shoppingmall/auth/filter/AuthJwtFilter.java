@@ -49,7 +49,7 @@ public class AuthJwtFilter extends OncePerRequestFilter {
             log.info(request.getServletPath());
 
             // Access 토큰이 유효할 경우 및 엔드포인트 경로가 /auth 가 아닐 경우
-            if(!Path.of(requestPath).startsWith("/auth") && token != null && jwtUtils.validate(token)) {
+            if(!Path.of(requestPath).startsWith("/auth/sign-in") && token != null && jwtUtils.validate(token)) {
                 // 만일, DB 내에 존재하는 Access Token 과 전달받은 Access Token 이 다를 경우 예외를 발생시킨다.
                 if(!authTokenRepository.existsByAccessToken(token)) {
                     throw new RestException(HttpStatus.UNAUTHORIZED, "Access Token 이 DB 내 토큰과 일치하지 않습니다. 이전 사용자/로그아웃된 사용자, 혹은 조작된 토큰일 수 있습니다.");
@@ -79,6 +79,9 @@ public class AuthJwtFilter extends OncePerRequestFilter {
         } catch (IllegalArgumentException e) {
             e.printStackTrace();
             filterErrorUtils.sendUnauthorizedException(e, response);
+        } catch (RestException e) {
+            e.printStackTrace();
+            filterErrorUtils.sendRestException(e, response);
         }
     }
 

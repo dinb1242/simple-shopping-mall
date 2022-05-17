@@ -26,4 +26,9 @@ public class AuthToken extends BaseEntity {
     @Column(columnDefinition = "bigint comment '유저 시퀀스'")
     private Long userId;
 
+    // 영속성 컨텍스트를 활용하여 Access Token 을 업데이트한다.
+    public void updateAccessToken(String accessToken) {
+        this.accessToken = accessToken;
+    }
+
 }

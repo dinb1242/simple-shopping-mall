@@ -1,6 +1,6 @@
 package com.shoppingmall.auth.dto.request;
 
-import com.shoppingmall.auth.enums.LostAccountTypeEnum;
+import com.shoppingmall.auth.enums.LostUsernameTypeEnum;
 import lombok.*;
 
 @Getter
@@ -8,9 +8,9 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class LostAccountRequestDto {
+public class LostUsernameRequestDto {
 
-    private LostAccountTypeEnum type;
+    private LostUsernameTypeEnum type;
     private String answer;
 
 }

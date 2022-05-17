@@ -2,6 +2,7 @@ package com.shoppingmall.boot.utils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.shoppingmall.boot.dto.RestResponseDto;
+import com.shoppingmall.boot.exception.RestException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -51,6 +52,15 @@ public class FilterErrorUtils {
         response.setContentType("application/json");
         response.setStatus(999);
         response.getWriter().write(objectMapper.writeValueAsString(getExceptionResponseDto(e, 999)));
+
+        return response;
+    }
+
+    public HttpServletResponse sendRestException(RestException e, HttpServletResponse response) throws IOException {
+        response.setCharacterEncoding("utf-8");
+        response.setContentType("application/json");
+        response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+        response.getWriter().write(objectMapper.writeValueAsString(getExceptionResponseDto(e, e.getHttpStatus().value())));
 
         return response;
     }
