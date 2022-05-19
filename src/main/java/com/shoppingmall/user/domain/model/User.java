@@ -43,7 +43,7 @@ public class User extends BaseEntity {
     @Column(columnDefinition = "varchar(100) comment '주소'")
     private String address;
 
-    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "tb_user_roles",
             joinColumns = @JoinColumn(name = "user_seq"),

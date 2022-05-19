@@ -13,6 +13,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -42,6 +45,21 @@ public class BoardServiceImpl implements BoardService {
         // 따라서 Response DTO 의 형태로 변환하여 리턴한다.
         // 해당 경우에는 Response DTO 의 빌더 생성자 패턴을 통해 엔티티를 넘겨 처리한다.
         return BoardResponseDto.builder().entity(boardEntity).build();
+    }
+
+    /**
+     * 전체 게시글을 조회한다.
+     * @return
+     * @throws Exception
+     */
+    @Override
+    @Transactional
+    public List<BoardResponseDto> findBoards() throws Exception {
+        List<Board> boardEntityList = boardRepository.findAllByStatus(1);
+
+        return boardEntityList.stream()
+                .map(BoardResponseDto::new)
+                .collect(Collectors.toList());
     }
 
 }

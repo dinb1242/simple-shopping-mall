@@ -3,6 +3,7 @@ package com.shoppingmall.user.controller;
 import com.shoppingmall.user.dto.request.UserInfoUpdateRequestDto;
 import com.shoppingmall.user.dto.request.UserPasswordUpdateRequestDto;
 import com.shoppingmall.user.dto.response.UserDetailsImpl;
+import com.shoppingmall.user.dto.response.UserResponseDto;
 import com.shoppingmall.user.service.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -14,6 +15,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Api(tags = {"[App & 관리자] 유저 API"})
 @Slf4j
@@ -35,11 +38,15 @@ public class UserController {
 
     @PutMapping("/with-auth/upd/info")
     @ApiOperation(value = "[App] 유저 정보 변경 API", notes = "Authorization 헤더를 통해 유저의 정보를 수정한다. 이때 전달받는 데이터는 DTO 이다.")
-    public ResponseEntity<?> updateUserInfo(
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "수정 성공", response = UserResponseDto.class),
+            @ApiResponse(code = 404, message = "수정 실패 - userSeq 미조회")
+    })
+    public ResponseEntity<UserResponseDto> updateUserInfo(
             @RequestHeader(HttpHeaders.AUTHORIZATION) String authorization,
             @RequestBody UserInfoUpdateRequestDto requestDto
             ) throws Exception {
-        return null;
+        return new ResponseEntity<>(userService.updateUserInfo(requestDto), HttpStatus.OK);
     }
 
     @PutMapping("/with-auth/upd/pw")
@@ -51,6 +58,34 @@ public class UserController {
     })
     public ResponseEntity<Boolean> updatePassword(@RequestHeader(HttpHeaders.AUTHORIZATION) String authorization, @RequestBody UserPasswordUpdateRequestDto requestDto) throws Exception {
         return new ResponseEntity<>(userService.updatePassword(requestDto), HttpStatus.OK);
+    }
+
+    /**
+     * 관리자 유저 관리
+     */
+
+    @GetMapping("/adm")
+    @ApiOperation(value = "[관리자] 전체 유저 조회 API", notes = "관리자 권한으로 전체 유저 목록을 조회한다.")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "조회 성공", response = UserResponseDto.class, responseContainer = "List")
+    })
+    public ResponseEntity<List<UserResponseDto>> admFindUsers(
+            @RequestHeader(HttpHeaders.AUTHORIZATION) String authorization
+    ) throws Exception {
+        return new ResponseEntity<>(userService.admFindUsers(), HttpStatus.OK);
+    }
+
+    @DeleteMapping("/adm/{userId}")
+    @ApiOperation(value = "[관리자] 특정 유저 삭제 API", notes = "관리자 권한으로 Path Variable 로 전달받은 userId 사용자를 DB 에서 영구 제거한다.")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "삭제 성공", response = UserResponseDto.class),
+            @ApiResponse(code = 404, message = "삭제 실패 - userId 미조회")
+    })
+    public ResponseEntity<UserResponseDto> admDeleteUser(
+            @RequestHeader(HttpHeaders.AUTHORIZATION) String authorization,
+            @PathVariable("userId") Long userId
+    ) throws Exception {
+        return new ResponseEntity<>(userService.admDeleteUser(userId), HttpStatus.OK);
     }
 
 }

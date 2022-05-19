@@ -31,8 +31,7 @@ public class SignUpRequestDto {
     @ApiModelProperty(value = "주소")
     private String address;
 
-    @ApiModelProperty(value = "권한")
-    @JsonIgnore
-    private List<String> roles;
+    @ApiModelProperty(value = "어드민 여부", example = "false")
+    private Boolean isAdmin;
 
 }

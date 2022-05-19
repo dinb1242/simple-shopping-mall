@@ -106,6 +106,13 @@ public class AuthServiceImpl implements AuthService {
                 .orElseThrow(() -> new RestException(HttpStatus.NOT_FOUND, "일치하는 권한을 찾을 수 없습니다. role=" + ERole.ROLE_USER.name()));
         roles.add(userRole);
 
+        // 만일 어드민 가입인 경우 어드민 권한을 추가한다.
+        if(requestDto.getIsAdmin()) {
+            Roles adminRole = rolesRepository.findByRole(ERole.ROLE_ADMIN)
+                    .orElseThrow(() -> new RestException(HttpStatus.NOT_FOUND, "일치하는 권한을 찾을 수 없습니다. role=" + ERole.ROLE_ADMIN.name()));
+            roles.add(adminRole);
+        }
+
         // 유저를 생성한다.
         User user = User.builder()
                 .username(requestDto.getUsername())

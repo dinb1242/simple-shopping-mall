@@ -1,11 +1,13 @@
 package com.shoppingmall.user.service.impl;
 
+import com.shoppingmall.auth.domain.repository.AuthTokenRepository;
 import com.shoppingmall.boot.exception.RestException;
 import com.shoppingmall.user.domain.model.User;
 import com.shoppingmall.user.domain.repository.UserRepository;
 import com.shoppingmall.user.dto.request.UserInfoUpdateRequestDto;
 import com.shoppingmall.user.dto.request.UserPasswordUpdateRequestDto;
 import com.shoppingmall.user.dto.response.UserDetailsImpl;
+import com.shoppingmall.user.dto.response.UserResponseDto;
 import com.shoppingmall.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,12 +17,16 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
+    private final AuthTokenRepository authTokenRepository;
     private final PasswordEncoder passwordEncoder;
 
     /**
@@ -45,15 +51,15 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     @Transactional
-    public UserDetailsImpl updateUserInfo(UserInfoUpdateRequestDto requestDto) throws Exception {
+    public UserResponseDto updateUserInfo(UserInfoUpdateRequestDto requestDto) throws Exception {
         UserDetailsImpl userDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         User userEntity = userRepository.findById(userDetails.getId())
                 .orElseThrow(() -> new RestException(HttpStatus.NOT_FOUND, "일치하는 유저를 찾을 수 없습니다. userId=" + userDetails.getId()));
 
         // 유저의 정보를 변경한다.
+        userEntity.updateInfo(requestDto);
 
-
-        return null;
+        return UserResponseDto.builder().entity(userEntity).build();
     }
 
     /**
@@ -77,5 +83,44 @@ public class UserServiceImpl implements UserService {
         userEntity.updatePassword(passwordEncoder.encode(requestDto.getUpdatedPassword()));
 
         return true;
+    }
+
+    /**
+     * 관리자 권한 API
+     */
+
+    /**
+     * 관리자 페이지에서 전체 유저 목록을 조회한다.
+     * @return
+     * @throws Exception
+     */
+    @Override
+    @Transactional
+    public List<UserResponseDto> admFindUsers() throws Exception {
+        List<User> userEntityList = userRepository.findAll();
+        return userEntityList.stream()
+                .map(UserResponseDto::new)
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * 관리자 권한으로 해당 유저를 제거한다.
+     * @param userId
+     * @return
+     * @throws Exception
+     */
+    @Override
+    @Transactional
+    public UserResponseDto admDeleteUser(Long userId) throws Exception {
+        User userEntity = userRepository.findById(userId)
+                .orElseThrow(() -> new RestException(HttpStatus.NOT_FOUND, "일치하는 유저를 찾을 수 없습니다. userId=" + userId));
+
+        // 유저를 제거한다.
+        userRepository.deleteById(userId);
+
+        // Auth Token DB 데이터도 모두 제거한다.
+        authTokenRepository.deleteByUserId(userEntity.getId());
+
+        return UserResponseDto.builder().entity(userEntity).build();
     }
 }

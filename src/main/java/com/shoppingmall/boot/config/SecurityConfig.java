@@ -46,7 +46,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/auth/sign-out").authenticated()
                 .antMatchers("/auth/**").permitAll()
                 .antMatchers("/user/with-auth/**").hasRole("USER")
-                .antMatchers(HttpMethod.POST, "/board").hasRole("USER")
+                .antMatchers("/board").hasRole("USER")
+                .antMatchers("/**/adm/**").hasRole("ADMIN")
                         .and();
 
         http.exceptionHandling().authenticationEntryPoint(authenticationEntry).and();
