@@ -18,6 +18,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 
 @Slf4j
@@ -40,14 +42,24 @@ public class ProductServiceImpl implements ProductService {
         if(productRepository.existsByProductCode(requestDto.getProductCode()))
             throw new RestException(HttpStatus.BAD_REQUEST, "이미 존재하는 상품코드입니다. code=" + requestDto.getProductCode());
 
-        // TODO: 해결하기
         /**
          * 썸네일 파일을 로컬에 저장한다.
          */
+        String path = "/data";
+        File directory = new File(path);
 
-//        File file = new File(new File().getAbsolutePath(), thumbnailFile.getOriginalFilename());
-//
-//        thumbnailFile.transferTo(file);
+        // path 경로에 대한 폴더가 없을 경우 생성한다.
+        if(!directory.exists()) {
+            try {
+                directory.mkdir();
+                System.out.println(String.format("%s 경로에 대한 폴더가 생성되었습니다.", directory.getAbsolutePath()));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        File file = new File(directory.getAbsolutePath(), thumbnailFile.getOriginalFilename());
+        thumbnailFile.transferTo(file);
 
         // 상품을 등록한다.
         Product productEntity = productRepository.save(requestDto.toEntity());

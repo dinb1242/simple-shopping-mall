@@ -6,15 +6,21 @@ import com.shoppingmall.product.dto.request.ProductUpdateRequestDto;
 import com.shoppingmall.product.dto.response.ProductResponseDto;
 import com.shoppingmall.product.service.ProductService;
 import io.swagger.annotations.*;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Encoding;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @Api(tags = {"[App & 관리자] 상품 API"})
@@ -26,7 +32,7 @@ public class ProductController {
 
     private final ProductService productService;
 
-    @PostMapping("/adm")
+    @PostMapping(value = "/adm", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
     @ApiOperation(value = "[관리자] 상품 등록 API", notes = "관리자 페이지 내에서 썸네일 파일과 data 키로 표현된 Request DTO 를 MultipartFile 로 전달받아 상품 등록을 수행한다. 이때, data 키로 표현된 request DTO 는 application/json 타입으로 전송해야한다.\n" +
             "{\n" +
             "  \"productCode\": \"string\" -> 상품 코드,\n" +
@@ -41,11 +47,12 @@ public class ProductController {
     })
     public ResponseEntity<ProductResponseDto> admCreateProduct(
             @RequestHeader(HttpHeaders.AUTHORIZATION) String authorization,
-            @RequestPart(required = false) MultipartFile thumbnailFile,
-            @ModelAttribute ProductSaveRequestDto requestDto
+            @RequestPart(name = "data") ProductSaveRequestDto aaaa,
+            @RequestPart(required = false) MultipartFile thumbnailFile
             ) throws Exception {
-
-        return new ResponseEntity<>(productService.createProduct(thumbnailFile, requestDto), HttpStatus.CREATED);
+        System.out.println(aaaa.toString());
+        return null;
+//        return new ResponseEntity<>(productService.createProduct(thumbnailFile, requestDto), HttpStatus.CREATED);
     }
 
     @PutMapping("/adm/{productId}")

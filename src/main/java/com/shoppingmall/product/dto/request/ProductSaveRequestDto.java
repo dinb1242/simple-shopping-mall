@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.shoppingmall.file.domain.model.File;
 import com.shoppingmall.product.domain.model.Product;
 import com.shoppingmall.product.enums.ProductTypeEnum;
+import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
