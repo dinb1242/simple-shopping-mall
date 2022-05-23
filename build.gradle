@@ -34,8 +34,8 @@ dependencies {
 	annotationProcessor "jakarta.annotation:jakarta.annotation-api"
 
 	// Swagger 3
-	implementation 'io.springfox:springfox-boot-starter:3.0.0'
-	implementation 'io.springfox:springfox-swagger-ui:3.0.0'
+	implementation group: 'io.springfox', name: 'springfox-swagger2', version: '2.9.2'
+	implementation group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.9.2'
 
 	implementation group: 'io.jsonwebtoken', name: 'jjwt', version: '0.9.1'
 }

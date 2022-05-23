@@ -6,8 +6,6 @@ import com.shoppingmall.product.dto.request.ProductUpdateRequestDto;
 import com.shoppingmall.product.dto.response.ProductResponseDto;
 import com.shoppingmall.product.service.ProductService;
 import io.swagger.annotations.*;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Encoding;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.ClassPathResource;
@@ -47,12 +45,11 @@ public class ProductController {
     })
     public ResponseEntity<ProductResponseDto> admCreateProduct(
             @RequestHeader(HttpHeaders.AUTHORIZATION) String authorization,
-            @RequestPart(name = "data") ProductSaveRequestDto aaaa,
+            @RequestPart(name = "data") ProductSaveRequestDto requestDto,
             @RequestPart(required = false) MultipartFile thumbnailFile
             ) throws Exception {
-        System.out.println(aaaa.toString());
-        return null;
-//        return new ResponseEntity<>(productService.createProduct(thumbnailFile, requestDto), HttpStatus.CREATED);
+        System.out.println(requestDto.toString());
+        return new ResponseEntity<>(productService.createProduct(thumbnailFile, requestDto), HttpStatus.CREATED);
     }
 
     @PutMapping("/adm/{productId}")
