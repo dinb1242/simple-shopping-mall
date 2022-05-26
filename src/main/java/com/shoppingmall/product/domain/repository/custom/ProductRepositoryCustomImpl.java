@@ -32,7 +32,9 @@ public class ProductRepositoryCustomImpl implements ProductRepositoryCustom {
         List<Product> productEntityList = queryFactory.selectFrom(product)
                 .where(
                         product.status.eq(1)
-                ).offset(pageable.getOffset())
+                )
+                .orderBy(product.createdAt.desc())
+                .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
 

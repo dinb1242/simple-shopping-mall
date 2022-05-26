@@ -48,7 +48,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/user/with-auth/**").hasRole("USER")
                 .antMatchers("/board").hasRole("USER")
                 .antMatchers("/**/adm/**").hasRole("ADMIN")
-                        .and();
+                .antMatchers("/shopping-cart").authenticated()
+                .and();
 
         http.exceptionHandling().authenticationEntryPoint(authenticationEntry).and();
         http.addFilterBefore(authJwtFilter, UsernamePasswordAuthenticationFilter.class);

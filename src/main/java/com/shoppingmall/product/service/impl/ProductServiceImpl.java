@@ -9,6 +9,7 @@ import com.shoppingmall.product.dto.response.ProductResponseDto;
 import com.shoppingmall.product.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.ServletContext;
 import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -28,6 +30,7 @@ import java.util.List;
 public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
+    private final ServletContext servletContext;
 
     /**
      * 관리자 페이지에서 상품을 등록한다.
@@ -45,13 +48,13 @@ public class ProductServiceImpl implements ProductService {
         /**
          * 썸네일 파일을 로컬에 저장한다.
          */
-        String path = "/data";
+        String path = "/home/boot/resources/static";
         File directory = new File(path);
 
         // path 경로에 대한 폴더가 없을 경우 생성한다.
         if(!directory.exists()) {
             try {
-                directory.mkdir();
+                directory.mkdirs();
                 System.out.println(String.format("%s 경로에 대한 폴더가 생성되었습니다.", directory.getAbsolutePath()));
             } catch (Exception e) {
                 e.printStackTrace();

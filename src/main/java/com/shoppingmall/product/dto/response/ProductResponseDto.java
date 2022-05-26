@@ -2,6 +2,7 @@ package com.shoppingmall.product.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.shoppingmall.product.domain.model.Product;
+import com.shoppingmall.product.enums.ProductTypeEnum;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Builder;
 import lombok.Getter;
@@ -27,6 +28,9 @@ public class ProductResponseDto {
     @ApiModelProperty(value = "상품정보")
     private String productInfo;
 
+    @ApiModelProperty(value = "상품 타입")
+    private ProductTypeEnum productType;
+
     @ApiModelProperty(value = "상품금액")
     private Long productPrice;
 
@@ -47,6 +51,7 @@ public class ProductResponseDto {
         this.productName = entity.getProductName();
         this.productCode = entity.getProductCode();
         this.productInfo = entity.getProductInfo();
+        this.productType = entity.getProductType();
         this.productPrice = entity.getProductPrice();
         this.createdAt = entity.getCreatedAt();
         this.updatedAt = entity.getUpdatedAt();

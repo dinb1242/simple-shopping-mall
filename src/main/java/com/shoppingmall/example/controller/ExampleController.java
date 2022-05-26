@@ -3,6 +3,7 @@ package com.shoppingmall.example.controller;
 import com.shoppingmall.example.dto.request.ExampleSaveRequestDto;
 import com.shoppingmall.example.dto.response.ExampleResponseDto;
 import com.shoppingmall.example.service.ExampleService;
+import com.shoppingmall.product.dto.request.ProductSaveRequestDto;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -12,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -41,6 +43,15 @@ public class ExampleController {
     })
     public ResponseEntity<List<ExampleResponseDto>> findExamples() {
         return new ResponseEntity<>(exampleService.findExamples(), HttpStatus.OK);
+    }
+
+    @PutMapping()
+    @ApiOperation(value = "테스트")
+    public ResponseEntity<ExampleResponseDto> testFunc(
+            @RequestPart(name = "data") ExampleSaveRequestDto requestDto
+//            @RequestPart MultipartFile file
+            ) {
+        return null;
     }
 
 }
