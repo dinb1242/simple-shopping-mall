@@ -3,6 +3,7 @@ package com.shoppingmall.boot.advisor;
 import com.shoppingmall.boot.dto.RestResponseDto;
 import com.shoppingmall.boot.exception.RestException;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -33,6 +34,12 @@ public class RestExceptionHandler  {
     public ResponseEntity<?> internalServerErrorHandler(HttpServerErrorException.InternalServerError e) {
         RestResponseDto responseDto = makeRestResponseDto(e.getStatusCode().value(), e.getMessage());
         return new ResponseEntity<>(responseDto, e.getStatusCode());
+    }
+
+    @ExceptionHandler()
+    public ResponseEntity<?> allExceptionHandler(Exception e) {
+        RestResponseDto responseDto = makeRestResponseDto(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage());
+        return new ResponseEntity<>(responseDto, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
 }

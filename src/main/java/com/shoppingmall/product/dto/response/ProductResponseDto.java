@@ -1,6 +1,7 @@
 package com.shoppingmall.product.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.shoppingmall.file.domain.model.FileEntity;
 import com.shoppingmall.product.domain.model.Product;
 import com.shoppingmall.product.enums.ProductTypeEnum;
 import io.swagger.annotations.ApiModelProperty;
@@ -34,6 +35,9 @@ public class ProductResponseDto {
     @ApiModelProperty(value = "상품금액")
     private Long productPrice;
 
+    @ApiModelProperty(value = "썸네일 파일")
+    private FileEntity thumbnailFile;
+
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @ApiModelProperty(value = "생성일")
     private LocalDateTime createdAt;
@@ -53,6 +57,7 @@ public class ProductResponseDto {
         this.productInfo = entity.getProductInfo();
         this.productType = entity.getProductType();
         this.productPrice = entity.getProductPrice();
+        this.thumbnailFile = entity.getThumbnailFile();
         this.createdAt = entity.getCreatedAt();
         this.updatedAt = entity.getUpdatedAt();
         this.status = entity.getStatus();

@@ -20,7 +20,7 @@ public class RestControllerAdvisor implements ResponseBodyAdvice {
     public boolean supports(MethodParameter returnType, Class converterType) {
         String endpoint = returnType.getContainingClass().getSimpleName();
         log.info(endpoint);
-        if(endpoint.equals("RestExceptionHandler") || endpoint.equals("BasicErrorController") || endpoint.equals("ApiResourceController") || endpoint.equals("Swagger2ControllerWebMvc")) {
+        if(endpoint.equals("RestExceptionHandler") || endpoint.equals("BasicErrorController") || endpoint.equals("ApiResourceController") || endpoint.equals("Swagger2ControllerWebMvc") || endpoint.equals("Swagger2Controller")) {
             return false;
         }
         return true;

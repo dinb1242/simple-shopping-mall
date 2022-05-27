@@ -6,8 +6,6 @@ import com.shoppingmall.product.dto.request.ProductUpdateRequestDto;
 import com.shoppingmall.product.dto.response.ProductResponseDto;
 import com.shoppingmall.product.service.ProductService;
 import io.swagger.annotations.*;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Encoding;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.ClassPathResource;

@@ -1,6 +1,7 @@
 package com.shoppingmall.product.service.impl;
 
 import com.shoppingmall.boot.exception.RestException;
+import com.shoppingmall.file.domain.model.FileEntity;
 import com.shoppingmall.product.domain.model.Product;
 import com.shoppingmall.product.domain.repository.ProductRepository;
 import com.shoppingmall.product.dto.request.ProductSaveRequestDto;
@@ -23,6 +24,7 @@ import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.UUID;
 
 @Slf4j
 @Service
@@ -45,26 +47,37 @@ public class ProductServiceImpl implements ProductService {
         if(productRepository.existsByProductCode(requestDto.getProductCode()))
             throw new RestException(HttpStatus.BAD_REQUEST, "이미 존재하는 상품코드입니다. code=" + requestDto.getProductCode());
 
+        System.out.println(thumbnailFile.getContentType());
+
+        if(!thumbnailFile.getContentType().startsWith("image"))
+            throw new RestException(HttpStatus.BAD_REQUEST, "이미지 파일이 아닙니다. contentType=" + thumbnailFile.getContentType());
+
         /**
          * 썸네일 파일을 로컬에 저장한다.
          */
-        String path = "/home/boot/resources/static";
-        File directory = new File(path);
+        // resources/public 경로를 읽어온다.
+        ClassPathResource resource = new ClassPathResource("public");
+        String publicDirPath = resource.getURL().getPath();
 
-        // path 경로에 대한 폴더가 없을 경우 생성한다.
-        if(!directory.exists()) {
-            try {
-                directory.mkdirs();
-                System.out.println(String.format("%s 경로에 대한 폴더가 생성되었습니다.", directory.getAbsolutePath()));
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
+        // 파일 이름을 UUID 를 붙여 암호화한다.
+        String uuid = UUID.randomUUID().toString();
+        String fileEncName = uuid + thumbnailFile.getOriginalFilename();
 
-        File file = new File(directory.getAbsolutePath(), thumbnailFile.getOriginalFilename());
+        File file = new File(publicDirPath, fileEncName);
+
+        // 파일을 저장한다.
         thumbnailFile.transferTo(file);
 
         // 상품을 등록한다.
+        requestDto.setThumbnailFile(
+                FileEntity.builder()
+                        .fileEncName(fileEncName)
+                        .filePath(publicDirPath + thumbnailFile.getOriginalFilename())
+                        .fileSize(thumbnailFile.getSize())
+                        .fileType(thumbnailFile.getContentType())
+                        .fileOriginalName(thumbnailFile.getOriginalFilename())
+                        .build()
+        );
         Product productEntity = productRepository.save(requestDto.toEntity());
 
         // DTO 로 변환하여 반환한다.

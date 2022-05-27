@@ -10,6 +10,8 @@ import lombok.*;
 @Builder
 public class FileDto {
 
+    private Integer test;
+
 //    @ApiModelProperty(value = "")
 
 }

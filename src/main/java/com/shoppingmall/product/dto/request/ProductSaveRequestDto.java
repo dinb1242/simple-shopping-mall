@@ -1,20 +1,14 @@
 package com.shoppingmall.product.dto.request;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.shoppingmall.file.domain.model.File;
+import com.shoppingmall.file.domain.model.FileEntity;
 import com.shoppingmall.product.domain.model.Product;
 import com.shoppingmall.product.enums.ProductTypeEnum;
-import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import org.springframework.web.multipart.MultipartFile;
-
-import javax.persistence.CascadeType;
-import javax.persistence.FetchType;
-import javax.persistence.OneToMany;
 
 @Getter
 @Setter
@@ -37,6 +31,10 @@ public class ProductSaveRequestDto {
     @ApiModelProperty(value = "상품타입", allowableValues = "TYPE_BEST, TYPE_TECH", example = "TYPE_BEST 또는 TYPE_TECH")
     private ProductTypeEnum productType;
 
+    @JsonIgnore
+    @ApiModelProperty(hidden = true)
+    private FileEntity thumbnailFile;
+
     public Product toEntity() {
         return Product.builder()
                 .productName(productName)
@@ -44,6 +42,7 @@ public class ProductSaveRequestDto {
                 .productInfo(productInfo)
                 .productPrice(productPrice)
                 .productType(productType)
+                .thumbnailFile(thumbnailFile)
                 .build();
     }
 
