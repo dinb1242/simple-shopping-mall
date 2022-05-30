@@ -47,10 +47,10 @@ public class ProductServiceImpl implements ProductService {
         if(productRepository.existsByProductCode(requestDto.getProductCode()))
             throw new RestException(HttpStatus.BAD_REQUEST, "이미 존재하는 상품코드입니다. code=" + requestDto.getProductCode());
 
-        System.out.println(thumbnailFile.getContentType());
-
         if(!thumbnailFile.getContentType().startsWith("image"))
             throw new RestException(HttpStatus.BAD_REQUEST, "이미지 파일이 아닙니다. contentType=" + thumbnailFile.getContentType());
+
+        log.info(String.format("Product Thumbnail File Type: %s", thumbnailFile.getContentType()));
 
         /**
          * 썸네일 파일을 로컬에 저장한다.

@@ -34,7 +34,7 @@ public class ProductController {
     @ApiOperation(value = "[관리자] 상품 등록 API", notes = "관리자 페이지 내에서 상품 등록을 수행한다.\n" +
             "{\n" +
             "  \"productCode\": \"string\" -> 상품 코드,\n" +
-            "  \"productCode\": \"string\" -> 상품 타입 (TYPE_BEST / TYPE_TECH 둘 중 한개),\n" +
+            "  \"productType\": \"string\" -> 상품 타입 (TYPE_BEST / TYPE_TECH 둘 중 한개),\n" +
             "  \"productInfo\": \"string\" -> 상품 설명,\n" +
             "  \"productName\": \"string\" -> 상품명,\n" +
             "  \"productPrice\": 0 -> 상품 단가\n" +
@@ -46,7 +46,7 @@ public class ProductController {
     })
     public ResponseEntity<ProductResponseDto> admCreateProduct(
             @RequestHeader(HttpHeaders.AUTHORIZATION) String authorization,
-            @ModelAttribute ProductSaveRequestDto data,
+            @RequestPart ProductSaveRequestDto data,
             @RequestPart(required = false) MultipartFile thumbnailFile
             ) throws Exception {
         return new ResponseEntity<>(productService.createProduct(thumbnailFile, data), HttpStatus.CREATED);

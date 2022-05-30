@@ -27,18 +27,21 @@ public class RestExceptionHandler  {
     @ExceptionHandler(RestException.class)
     public ResponseEntity<?> restExceptionHandler(RestException e) {
         RestResponseDto responseDto = makeRestResponseDto(e.getHttpStatus().value(), e.getMessage());
+        e.printStackTrace();
         return new ResponseEntity<>(responseDto, e.getHttpStatus());
     }
 
     @ExceptionHandler(HttpServerErrorException.InternalServerError.class)
     public ResponseEntity<?> internalServerErrorHandler(HttpServerErrorException.InternalServerError e) {
         RestResponseDto responseDto = makeRestResponseDto(e.getStatusCode().value(), e.getMessage());
+        e.printStackTrace();
         return new ResponseEntity<>(responseDto, e.getStatusCode());
     }
 
     @ExceptionHandler()
     public ResponseEntity<?> allExceptionHandler(Exception e) {
         RestResponseDto responseDto = makeRestResponseDto(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage());
+        e.printStackTrace();
         return new ResponseEntity<>(responseDto, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 

@@ -39,7 +39,7 @@ public class Product extends BaseEntity {
     @Column(columnDefinition = "varchar(100) comment '상품 카테고리'")
     private ProductTypeEnum productType;
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(
             name = "tb_product_file",
             joinColumns = @JoinColumn(name = "product_id"),
