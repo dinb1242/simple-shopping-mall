@@ -21,6 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.ServletContext;
 import java.io.File;
+import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
@@ -56,14 +57,26 @@ public class ProductServiceImpl implements ProductService {
          * 썸네일 파일을 로컬에 저장한다.
          */
         // resources/public 경로를 읽어온다.
-        ClassPathResource resource = new ClassPathResource("public");
-        String publicDirPath = resource.getURL().getPath();
+        String path = "/home/data/public";
+        File directory = new File(path);
+
+        // path 경로에 대한 폴더가 없을 경우 생성한다.
+        if(!directory.exists()) {
+            try {
+                directory.mkdirs();
+                System.out.println(String.format("%s 경로에 대한 폴더가 생성되었습니다.", directory.getAbsolutePath()));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+//        ClassPathResource resource = new ClassPathResource("/home/data/public");
+//        String publicDirPath = resource.getURL().getPath();
 
         // 파일 이름을 UUID 를 붙여 암호화한다.
         String uuid = UUID.randomUUID().toString();
         String fileEncName = uuid + thumbnailFile.getOriginalFilename();
 
-        File file = new File(publicDirPath, fileEncName);
+        File file = new File(directory.getAbsolutePath(), fileEncName);
 
         // 파일을 저장한다.
         thumbnailFile.transferTo(file);
@@ -72,7 +85,7 @@ public class ProductServiceImpl implements ProductService {
         requestDto.setThumbnailFile(
                 FileEntity.builder()
                         .fileEncName(fileEncName)
-                        .filePath(publicDirPath + thumbnailFile.getOriginalFilename())
+                        .filePath(directory.getAbsolutePath().replace("\\", "/") + "/" + thumbnailFile.getOriginalFilename())
                         .fileSize(thumbnailFile.getSize())
                         .fileType(thumbnailFile.getContentType())
                         .fileOriginalName(thumbnailFile.getOriginalFilename())
