@@ -110,4 +110,37 @@ public class OrderServiceImpl implements OrderService {
                 .build();
     }
 
+    /**
+     * 전체 주문을 조회한다.
+     * @return
+     * @throws Exception
+     */
+    @Override
+    @Transactional
+    public List<OrderResponseDto> findAllOrders() throws Exception {
+        UserDetailsImpl userDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        Long userId = userDetails.getId();
+
+        List<Order> orderEntity = orderRepository.findAllByUserIdAndStatus(userId, 1);
+        List<OrderResponseDto> orderResponseDtoList = orderEntity.stream()
+                .map(eachEntity -> OrderResponseDto.builder().entity(eachEntity).build())
+                .collect(Collectors.toList());
+
+        return orderResponseDtoList;
+    }
+
+    /**
+     * 주문을 조회한다.
+     * @param orderId
+     * @return
+     * @throws Exception
+     */
+    @Override
+    @Transactional
+    public OrderResponseDto findOrder(Long orderId) throws Exception {
+        Order orderEntity = orderRepository.findById(orderId)
+                .orElseThrow(() -> new RestException(HttpStatus.NOT_FOUND, "일치하는 주문을 찾을 수 없습니다. orderId=" + orderId));
+        return OrderResponseDto.builder().entity(orderEntity).build();
+    }
+
 }

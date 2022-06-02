@@ -8,5 +8,7 @@ import java.util.List;
 public interface OrderService {
 
     OrderResponseDto createOrder(OrderSaveRequestDto requestDto) throws Exception;
+    List<OrderResponseDto> findAllOrders() throws Exception;
+    OrderResponseDto findOrder(Long orderId) throws Exception;
 
 }
