@@ -6,6 +6,7 @@ import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "tb_order")
@@ -27,11 +28,11 @@ public class Order extends BaseEntity {
     @Column(columnDefinition = "varchar(255) comment '주문 번호'")
     private String orderNumber;
 
-    @Column(columnDefinition = "varchar(255) comment '상품 번호'")
-    private String productCode;
-
-    @Column(columnDefinition = "int comment '구매 수량'")
-    private Integer productCnt;
+//    @Column(columnDefinition = "varchar(255) comment '상품 코드'")
+//    private String productCode;
+//
+//    @Column(columnDefinition = "int comment '구매 수량'")
+//    private Integer productCnt;
 
     @Column(columnDefinition = "bigint comment '총 구매액'")
     private Long price;
@@ -49,4 +50,11 @@ public class Order extends BaseEntity {
     @Column(columnDefinition = "varchar(50) comment '받는 사람 휴대번호'")
     private String receiverPhone;
 
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "orderProductId")
+    private List<OrderProduct> orderProductList;
+
+    public void setOrderProductList(List<OrderProduct> orderProductList) {
+        this.orderProductList = orderProductList;
+    }
 }
