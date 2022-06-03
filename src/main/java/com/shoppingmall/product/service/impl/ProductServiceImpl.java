@@ -82,7 +82,7 @@ public class ProductServiceImpl implements ProductService {
         thumbnailFile.transferTo(file);
 
         // 상품을 등록한다.
-        requestDto.setThumbnailFile(
+        requestDto.enrollThumbnailFile(
                 FileEntity.builder()
                         .fileEncName(fileEncName)
                         .filePath(directory.getAbsolutePath().replace("\\", "/") + "/" + thumbnailFile.getOriginalFilename())
@@ -92,6 +92,7 @@ public class ProductServiceImpl implements ProductService {
                         .build()
         );
         Product productEntity = productRepository.save(requestDto.toEntity());
+        log.info("상품이 등록되었습니다.");
 
         // DTO 로 변환하여 반환한다.
         return ProductResponseDto.builder().entity(productEntity).build();

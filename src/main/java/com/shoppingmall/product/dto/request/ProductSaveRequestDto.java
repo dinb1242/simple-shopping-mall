@@ -11,7 +11,6 @@ import lombok.Setter;
 import lombok.ToString;
 
 @Getter
-@Setter
 @ToString
 @NoArgsConstructor
 public class ProductSaveRequestDto {
@@ -34,6 +33,30 @@ public class ProductSaveRequestDto {
     @JsonIgnore
     @ApiModelProperty(hidden = true)
     private FileEntity thumbnailFile;
+
+    public void setProductName(String productName) {
+        this.productName = productName;
+    }
+
+    public void setProductCode(String productCode) {
+        this.productCode = productCode;
+    }
+
+    public void setProductInfo(String productInfo) {
+        this.productInfo = productInfo;
+    }
+
+    public void setProductPrice(Long productPrice) {
+        this.productPrice = productPrice;
+    }
+
+    public void setProductType(ProductTypeEnum productType) {
+        this.productType = productType;
+    }
+
+    public void enrollThumbnailFile(FileEntity thumbnailFile) {
+        this.thumbnailFile = thumbnailFile;
+    }
 
     public Product toEntity() {
         return Product.builder()

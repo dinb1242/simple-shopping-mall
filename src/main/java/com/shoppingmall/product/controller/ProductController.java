@@ -46,7 +46,7 @@ public class ProductController {
     })
     public ResponseEntity<ProductResponseDto> admCreateProduct(
             @RequestHeader(HttpHeaders.AUTHORIZATION) String authorization,
-            @RequestPart ProductSaveRequestDto data,
+            @ModelAttribute ProductSaveRequestDto data,
             @RequestPart(required = false) MultipartFile thumbnailFile
             ) throws Exception {
         return new ResponseEntity<>(productService.createProduct(thumbnailFile, data), HttpStatus.CREATED);
