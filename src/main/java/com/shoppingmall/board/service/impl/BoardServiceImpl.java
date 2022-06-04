@@ -6,6 +6,7 @@ import com.shoppingmall.board.domain.repository.BoardRepository;
 import com.shoppingmall.board.dto.request.BoardSaveRequestDto;
 import com.shoppingmall.board.dto.response.BoardResponseDto;
 import com.shoppingmall.board.service.BoardService;
+import com.shoppingmall.user.domain.repository.UserRepository;
 import com.shoppingmall.user.dto.response.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,6 +23,7 @@ import java.util.stream.Collectors;
 public class BoardServiceImpl implements BoardService {
 
     private final BoardRepository boardRepository;
+    private final UserRepository userRepository;
 
     /**
      * DTO 를 전달받아 Repository 를 활용하여 데이터를 저장한다.
@@ -55,11 +57,15 @@ public class BoardServiceImpl implements BoardService {
     @Override
     @Transactional
     public List<BoardResponseDto> findBoards() throws Exception {
-        List<Board> boardEntityList = boardRepository.findAllByStatus(1);
-
-        return boardEntityList.stream()
-                .map(BoardResponseDto::new)
-                .collect(Collectors.toList());
+//        List<Board> boardEntityList = boardRepository.findAllByStatus(1);
+//
+//        List<BoardResponseDto> boardResponseDtoList = boardEntityList.stream()
+//                .map(eachEntity -> {
+//
+//                })
+//                .collect(Collectors.toList());
+//
+        return boardRepository.findAllBoards();
     }
 
 }
