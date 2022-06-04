@@ -1,5 +1,9 @@
 package com.shoppingmall.example.controller;
 
+import com.amazonaws.SdkClientException;
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.model.AmazonS3Exception;
+import com.amazonaws.services.s3.model.Bucket;
 import com.shoppingmall.example.dto.request.ExampleSaveRequestDto;
 import com.shoppingmall.example.dto.response.ExampleResponseDto;
 import com.shoppingmall.example.service.ExampleService;
@@ -25,6 +29,7 @@ import java.util.List;
 public class ExampleController {
 
     private final ExampleService exampleService;
+    private final AmazonS3 s3;
 
     @PostMapping("")
     @ApiOperation(value = "예제 등록 API", notes = "DTO 를 전달받아 DB 에 예제 데이터를 등록한다.")
@@ -45,12 +50,21 @@ public class ExampleController {
         return new ResponseEntity<>(exampleService.findExamples(), HttpStatus.OK);
     }
 
-    @PutMapping()
+    @PostMapping("/s3")
     @ApiOperation(value = "테스트")
     public ResponseEntity<ExampleResponseDto> testFunc(
-            @RequestPart(name = "data") ExampleSaveRequestDto requestDto
-//            @RequestPart MultipartFile file
             ) {
+        try {
+            List<Bucket> buckets = s3.listBuckets();
+            System.out.println("Bucket List: ");
+            for (Bucket bucket : buckets) {
+                System.out.println("    name=" + bucket.getName() + ", creation_date=" + bucket.getCreationDate() + ", owner=" + bucket.getOwner().getId());
+            }
+        } catch (AmazonS3Exception e) {
+            e.printStackTrace();
+        } catch(SdkClientException e) {
+            e.printStackTrace();
+        }
         return null;
     }
 

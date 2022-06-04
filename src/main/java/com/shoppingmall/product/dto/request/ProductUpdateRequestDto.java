@@ -1,5 +1,6 @@
 package com.shoppingmall.product.dto.request;
 
+import com.shoppingmall.product.enums.ProductTypeEnum;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,6 +10,9 @@ import lombok.ToString;
 @ToString
 @NoArgsConstructor
 public class ProductUpdateRequestDto {
+
+    @ApiModelProperty(value = "상품 타입")
+    private ProductTypeEnum productType;
 
     @ApiModelProperty(value = "상품명")
     private String productName;

@@ -53,6 +53,8 @@ public class Product extends BaseEntity {
      * @param requestDto
      */
     public void update(ProductUpdateRequestDto requestDto) {
+        if (requestDto.getProductType() != null)
+            this.productType = requestDto.getProductType();
         if (requestDto.getProductName() != null)
             this.productName = requestDto.getProductName();
         if (requestDto.getProductCode() != null)

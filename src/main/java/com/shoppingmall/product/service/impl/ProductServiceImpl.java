@@ -1,5 +1,11 @@
 package com.shoppingmall.product.service.impl;
 
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.AmazonS3Client;
+import com.amazonaws.services.s3.model.CannedAccessControlList;
+import com.amazonaws.services.s3.model.ObjectMetadata;
+import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.amazonaws.services.s3.model.PutObjectResult;
 import com.shoppingmall.boot.exception.RestException;
 import com.shoppingmall.file.domain.model.FileEntity;
 import com.shoppingmall.product.domain.model.Product;
@@ -33,7 +39,7 @@ import java.util.UUID;
 public class ProductServiceImpl implements ProductService {
 
     private final ProductRepository productRepository;
-    private final ServletContext servletContext;
+    private final AmazonS3Client s3;
 
     /**
      * 관리자 페이지에서 상품을 등록한다.
@@ -53,22 +59,22 @@ public class ProductServiceImpl implements ProductService {
 
         log.info(String.format("Product Thumbnail File Type: %s", thumbnailFile.getContentType()));
 
-        /**
-         * 썸네일 파일을 로컬에 저장한다.
-         */
-        // resources/public 경로를 읽어온다.
-        String path = "/home/data/public";
-        File directory = new File(path);
-
-        // path 경로에 대한 폴더가 없을 경우 생성한다.
-        if(!directory.exists()) {
-            try {
-                directory.mkdirs();
-                System.out.println(String.format("%s 경로에 대한 폴더가 생성되었습니다.", directory.getAbsolutePath()));
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
+//        /**
+//         * 썸네일 파일을 로컬에 저장한다.
+//         */
+//        // resources/public 경로를 읽어온다.
+//        String path = "/home/data/public";
+//        File directory = new File(path);
+//
+//        // path 경로에 대한 폴더가 없을 경우 생성한다.
+//        if(!directory.exists()) {
+//            try {
+//                directory.mkdirs();
+//                System.out.println(String.format("%s 경로에 대한 폴더가 생성되었습니다.", directory.getAbsolutePath()));
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+//        }
 //        ClassPathResource resource = new ClassPathResource("/home/data/public");
 //        String publicDirPath = resource.getURL().getPath();
 
@@ -76,26 +82,35 @@ public class ProductServiceImpl implements ProductService {
         String uuid = UUID.randomUUID().toString();
         String fileEncName = uuid + thumbnailFile.getOriginalFilename();
 
-        File file = new File(directory.getAbsolutePath(), fileEncName);
+        ObjectMetadata objectMetadata = new ObjectMetadata();
+        objectMetadata.setContentLength(thumbnailFile.getSize());
+        objectMetadata.setContentType(thumbnailFile.getContentType());
+        PutObjectRequest putObjectRequest = new PutObjectRequest("simple-shopping-mall", fileEncName, thumbnailFile.getInputStream(), objectMetadata);
+        
+        try {
+            PutObjectResult putObjectResult = s3.putObject(putObjectRequest);
+            String url = s3.getResourceUrl("simple-shopping-mall", fileEncName);
 
-        // 파일을 저장한다.
-        thumbnailFile.transferTo(file);
+            // 상품을 등록한다.
+            requestDto.enrollThumbnailFile(
+                    FileEntity.builder()
+                            .fileEncName(fileEncName)
+                            .filePath(url)
+                            .fileSize(thumbnailFile.getSize())
+                            .fileType(thumbnailFile.getContentType())
+                            .fileOriginalName(thumbnailFile.getOriginalFilename())
+                            .build()
+            );
 
-        // 상품을 등록한다.
-        requestDto.enrollThumbnailFile(
-                FileEntity.builder()
-                        .fileEncName(fileEncName)
-                        .filePath(directory.getAbsolutePath().replace("\\", "/") + "/" + thumbnailFile.getOriginalFilename())
-                        .fileSize(thumbnailFile.getSize())
-                        .fileType(thumbnailFile.getContentType())
-                        .fileOriginalName(thumbnailFile.getOriginalFilename())
-                        .build()
-        );
-        Product productEntity = productRepository.save(requestDto.toEntity());
-        log.info("상품이 등록되었습니다.");
+            Product productEntity = productRepository.save(requestDto.toEntity());
+            log.info("상품이 등록되었습니다.");
 
-        // DTO 로 변환하여 반환한다.
-        return ProductResponseDto.builder().entity(productEntity).build();
+            // DTO 로 변환하여 반환한다.
+            return ProductResponseDto.builder().entity(productEntity).build();
+        }  catch (Exception e) {
+            e.printStackTrace();
+            throw new RestException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
+        }
     }
 
     @Override
