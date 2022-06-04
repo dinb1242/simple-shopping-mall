@@ -23,5 +23,6 @@ public class OrderProduct extends BaseEntity {
     private String orderNumber;
     private String productCode;
     private Integer productCnt;
+    private String productName;
 
 }

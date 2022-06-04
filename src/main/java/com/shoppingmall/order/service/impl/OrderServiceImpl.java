@@ -78,6 +78,7 @@ public class OrderServiceImpl implements OrderService {
             orderProductList.add(
                     OrderProduct.builder()
                             .orderNumber(orderNumber)
+                            .productName(productEntity.getProductName())
                             .productCode(productEntity.getProductCode())
                             .productCnt(shoppingCartEntity.getProductCnt())
                             .build()
@@ -140,6 +141,17 @@ public class OrderServiceImpl implements OrderService {
     public OrderResponseDto findOrder(Long orderId) throws Exception {
         Order orderEntity = orderRepository.findById(orderId)
                 .orElseThrow(() -> new RestException(HttpStatus.NOT_FOUND, "일치하는 주문을 찾을 수 없습니다. orderId=" + orderId));
+        return OrderResponseDto.builder().entity(orderEntity).build();
+    }
+
+    @Override
+    @Transactional
+    public OrderResponseDto deleteOrder(Long orderId) throws Exception {
+        Order orderEntity = orderRepository.findById(orderId)
+                .orElseThrow(() -> new RestException(HttpStatus.NOT_FOUND, "일치하는 주문을 찾을 수 없습니다. orderId=" + orderId));
+
+        orderEntity.setStatus(-1);
+
         return OrderResponseDto.builder().entity(orderEntity).build();
     }
 

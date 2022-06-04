@@ -67,4 +67,13 @@ public class OrderController {
         return new ResponseEntity<>(orderService.findOrder(orderId), HttpStatus.OK);
     }
 
+    @DeleteMapping("/{orderId}")
+    @ApiOperation(value = "[App] 주문 삭제 API - JWT", notes = "Order ID 를 Path Variable 로 전달받아 해당하는 주문을 제거한다.")
+    public ResponseEntity<OrderResponseDto> deleteOrder(
+            @RequestHeader(HttpHeaders.AUTHORIZATION) String authorization,
+            @PathVariable("orderId") Long orderId
+    ) throws Exception {
+        return new ResponseEntity<>(orderService.deleteOrder(orderId), HttpStatus.OK);
+    }
+
 }
