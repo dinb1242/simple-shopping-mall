@@ -24,6 +24,9 @@ public class ShoppingCartResponseDto {
     @ApiModelProperty(value = "상품 코드")
     private String productCode;
 
+    @ApiModelProperty(value = "상품명")
+    private String productName;
+
     @ApiModelProperty(value = "구매 수량")
     private Integer productCnt;
 
@@ -44,6 +47,7 @@ public class ShoppingCartResponseDto {
         this.userId = entity.getUserId();
         this.productCode = entity.getProductCode();
         this.productCnt = entity.getProductCnt();
+        this.productName = entity.getProductName();
         this.price = entity.getPrice();
         this.createdAt = entity.getCreatedAt();
         this.updatedAt = entity.getUpdatedAt();

@@ -17,6 +17,9 @@ public class ShoppingCartSaveRequestDto {
     @ApiModelProperty(value = "상품 코드 ")
     private String productCode;
 
+    @ApiModelProperty(value = "상품명", hidden = true)
+    private String productName;
+
     @ApiModelProperty(value = "구매 수량")
     private Integer productCnt;
 
@@ -31,11 +34,16 @@ public class ShoppingCartSaveRequestDto {
         this.price = price;
     }
 
+    public void setProductName(String productName) {
+        this.productName = productName;
+    }
+
     public ShoppingCart toEntity() {
         return ShoppingCart.builder()
                 .userId(userId)
                 .productCode(productCode)
                 .productCnt(productCnt)
+                .productName(productName)
                 .price(price)
                 .build();
     }

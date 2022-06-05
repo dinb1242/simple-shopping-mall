@@ -53,6 +53,9 @@ public class ShoppingCartServiceImpl implements ShoppingCartService {
         log.info(String.format("총 금액: %d원", price));
         requestDto.setPrice(price);
 
+        // 상품명을 DTO 에 삽입한다.
+        requestDto.setProductName(productEntity.getProductName());
+
         // 만일, 동일한 상품코드가 이미 장바구니 내에 있을 경우 기존 데이터를 삭제한다.
         if(shoppingCartRepository.existsByProductCodeAndUserId(requestDto.getProductCode(), requestDto.getUserId())) {
             shoppingCartRepository.deleteByProductCodeAndUserId(requestDto.getProductCode(), requestDto.getUserId());

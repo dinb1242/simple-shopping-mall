@@ -27,6 +27,9 @@ public class ShoppingCart extends BaseEntity {
     @Column(columnDefinition = "varchar(255) comment '상품 코드'")
     private String productCode;
 
+    @Column(columnDefinition = "varchar(255) comment '상품명'")
+    private String productName;
+
     @Column(columnDefinition = "int comment '구매 수량'")
     private Integer productCnt;
 
