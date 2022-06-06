@@ -65,7 +65,7 @@ public class OrderServiceImpl implements OrderService {
                     .orElseThrow(() -> new RestException(HttpStatus.NOT_FOUND, "일치하는 상품을 찾을 수 없습니다. productCode=" + shoppingCartEntity.getProductCode()));
             productList.add(productEntity);
 
-            totalPrice = productEntity.getProductPrice() * shoppingCartEntity.getProductCnt();
+            totalPrice += productEntity.getProductPrice() * shoppingCartEntity.getProductCnt();
 
             log.info(String.format("상품 코드: %s, 상품 금액: %d, 구매 개수: %d, 합계 금액: %d, 총 구매금액: %d",
                     productEntity.getProductCode(),
