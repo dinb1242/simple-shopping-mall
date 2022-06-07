@@ -28,3 +28,8 @@ spring:
 
 jwt:
   secret: random_abcd
+
+aws:
+  s3:
+    access: ${s3.access}
+    secret: ${s3.secret}
